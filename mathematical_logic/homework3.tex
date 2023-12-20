@@ -1,0 +1,160 @@
+\documentclass[UTF8]{ctexart}
+\date{}
+\title{\vspace{-4em} 数理逻辑第三次作业}
+\pagestyle{plain}
+% \usepackage{ctex}
+\usepackage{fancyhdr}
+\usepackage[a4paper]{geometry}
+\usepackage{multicol}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{lipsum}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fbox}
+
+\CTEXsetup[format={\Large\bfseries}]{section}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+\begin{document}
+    \maketitle
+    
+    注：$f_{i}^{j}$ 表示第 $i$ 个 $j$ 元函数符号，$p_{i}^{j}$ 表示第 $i$ 个 $j$ 元谓词符号。
+
+    \section{}
+
+    找到下列公式中变量的自由出现和界定出现。（书定义 5.2.8）
+
+    \begin{enumerate}
+        \item $\forall x_3(\forall x_1 p_1^2(x_1, x_2)) \to p_1^{2}(x_3, a_1))$ \newline
+        自由出现： $x_2$   \newline
+        界定出现： $x_1$, $x_3$
+        \item $\forall x_2 p_1^2(x_3, x_2) \to \forall x_3 p_1^{2} (x_3, x_2)$  \newline
+        自由出现：第一个 $x_3$ ，第二个 $x_2$  \newline
+        界定出现：第一个 $x_2$ ，第二个 $x_3$
+        \item $\forall x_2 \exists x_1 p_1^3(x_1, x_2, f_1^2(x_1, x_2)) \lor \lnot \exists x_1 p_1^2(x_2, f_1^{1}(x_1))$    \newline
+        自由出现：第三个 $x_2$ \newline
+        界定出现：$x_1$ 和第一、二个 $x_2$
+    \end{enumerate}
+
+    \section{}
+
+    将下列自然语言的句子表示为公式。
+
+    \begin{enumerate}
+        \item $\forall x (p(x) \to q(x))$ \newline
+        $p(x)$ 表示 $x$ is persistent ，$q(x)$ 表示 $x$ can learn logic
+        \item $\lnot \exists x (p(x) \land q(x))$ \newline
+        $p(x)$ 表示 $x$ is politician ，$q(x)$ 表示 $x$ is honest
+        \item $(\lnot \forall x (p(x) \to q(x))) \land (\forall x (p(x) \to \lnot q(x)))$\newline
+        $p(x)$ 表示 $x$ is a bird, $q(x)$ 表示 $x$ can fly
+        \item $(\forall x p(x)) \to p(a)$ \newline
+        $p(x)$ 表示 $x$ can solve the problem, $a$ 表示 Hilary
+        \item $\lnot \exists x (\exists y (p(y) \land q(x, y)))$ \newline
+        $p(x)$ 表示 $x$ is a loser, $q(x, y)$ 表示 $x$ loves $y$
+        \item $(\forall x \exists y\ p(x, y) \land \lnot \exists x \forall y\ p(x, y)) \lor (\exists x \forall y\ p(x, y) \land \exists x \forall y \lnot p(x, y))$ \newline
+        $p(x, y)$ 表示 $x$ loves $y$
+        \item $(\exists x \forall y\ p(x, y)) \land (\exists y \forall x\ p(x, y)) \land \lnot (\forall x \forall y\ p(x, y))$ \newline
+        $p(x, y)$ 表示 you can fool $x$ at time $y$
+        \item $\forall x ((\lnot p(x, x)) \to p(a, x) )$ \newline
+        $a$ 表示 John, $p(x, y)$ 表示 $x$ hates $y$
+        \item $\forall A \forall B\ p(A, B) \to (A=B)$ \newline
+        $A, B$ 表示两个集合，$p(A, B)$ 表示 $A$ 和 $B$ 有相同的元素
+        \item $\lnot \exists x (\forall y\ (\lnot p(y, y) \leftrightarrow p(x, y)) )$ \newline
+        $p(x, y)$ 表示 $x \in y$
+        \item $\lnot \exists x (\forall y\ (\lnot p(y, y) \leftrightarrow p(x, y)) )$ \newline
+        $p(x, y)$ 表示 $x$ 给 $y$ 理发
+    \end{enumerate}
+
+    \section{}
+
+    证明下列公式是逻辑永真的（书 5.2.5 节）：
+
+    \begin{enumerate}
+        \item $\forall x A(x) \leftrightarrow \lnot \exists x \lnot A(x)$ \newline
+        "$\rightarrow$" 方向（即 $\forall x A(x) \to \lnot \exists x \lnot A(x)$）： \newline
+        假设存在赋值 $v$ 使得 $(\forall x A(x))^v=1$ 并且 $(\lnot \exists x \lnot A(x))^v=0$ ，\newline
+        由 $(\lnot \exists x \lnot A(x))^v=0$ 说明论域中存在元素 $a$ 使得 $(\lnot A(x))^{v/a}=1$ ，即 $(A(x))^{v/a}=0$ 。\newline
+        而 $(\forall x A(x))^v=1$ 说明对论域中任何元素 $b$ 均有 $(A(x))^{v/b}=1$ 。\newline
+        令 $b=a$ 得 $(A(x))^{v/a}=1$ ，与 $(A(x))^{v/a}=0$ 矛盾。 \newline
+        "$\leftarrow$" 方向（即 $\lnot \exists x \lnot A(x) \to \forall x A(x)$）：\newline
+        假设存在赋值 $v$ 使得 $(\lnot \exists x \lnot A(x))^v=1$ 且 $(\forall x A(x))^v=0$， \newline
+        由 $(\lnot \exists x \lnot A(x))^v=1$ 说明论域中存在元素 $a$ 使得 $(\lnot A(x))^{v/a}=0$ ，即 $(A(x))^{v/a}=1$ 。\newline
+        而 $(\forall x A(x))^v=0$ 说明对论域中任何元素 $b$ 均有 $(A(x))^{v/b}=0$ 。\newline
+        令 $b=a$ 得 $(A(x))^{v/a}=0$ 与 $(A(x))^{v/a}=1$ 矛盾。
+        \item $(\forall x A(x) \lor \forall x B(x)) \to \forall x (A(x) \lor B(x))$ \newline
+        假设存在赋值 $v$ 使得 $(\forall x A(x) \lor \forall x B(x))^v=1\, (1)$ 
+        且 $(\forall x (A(x) \lor B(x)))^v=0 \, (2)$
+        由 $(1)$ 得 $(\forall x A(x))^v=1\, (3.1)$ 或 $(\forall x B(x))^v=1\, (3.2)$ 。\newline
+        对论域中的任何元素 $a$ ，如果 $(3.1)$ 成立则 $(\forall x (A(x) \lor B(x)))^{v/a}=1 \, (4)$ ，如果 $(3.2)$ 成立亦可得 $(4)$ 。从而 $(4)$ 与 $(2)$ 矛盾。
+    \end{enumerate}
+
+    \section{}
+
+    判断下列公式是否是逻辑永真的（例题 5.2.14 下面的逻辑结论判定）：
+
+    \begin{enumerate}
+        \item $\lnot \exists y \forall x (p_1^2(x, y) \leftrightarrow \lnot p_1^2(x, x))$
+        \item $\exists x \exists y (p_1^2(x, y) \to \forall z\ p_1^2(z, y))$
+        \item $\exists x \exists y (p_1^1(x) \to p_2^1(y)) \to \exists x (p_1^1(x) \to p_2^1(x))$
+    \end{enumerate}
+
+    以上三个公式都是永真的，（参考了书上的例子，例题 5.2.14 这一页最下）假设该公式非永真，即存在赋值使得 $v(\cdots) = 0$ ，由判定过程找矛盾。
+
+    第 $1$ 个式子判定如下：
+    \begin{align*}
+        & v(\lnot \exists y \forall x (p_1^2(x, y) \leftrightarrow \lnot p_1^2(x, x))) = 0 \\
+        & v(\exists y \forall x (p_1^2(x, y) \leftrightarrow \lnot p_1^2(x, x))) = 1 \\
+        & \mathbf{E}b( v_{y/b}(\forall x(p_1^2(x, y) \leftrightarrow \lnot p_1^2(x, x))) = 1 ) \\
+        & \mathbf{E}b\mathbf{A}a( v_{y/b,x/a}( p_1^2(x, y) \leftrightarrow \lnot p_1^2(x, x) ) = 1 ) \\
+        & \mathbf{E}b\mathbf{A}a( v_{y/b,x/a}( p_1^2(x, y)) = 1\quad \mathrm{iff}\quad  v_{y/b,x/a}( \lnot p_1^2(x, x) ) = 1 ) \\
+        & \mathbf{E}b\mathbf{A}a( v_{y/b,x/a}( p_1^2(x, y)) = 1\quad \mathrm{iff}\quad  v_{y/b,x/a}( p_1^2(x, x) ) = 0 )
+    \end{align*}
+    
+    取 $a=b$ 得到矛盾：$v_{y/b,x/b}( p_1^2(x, y)) = 1\quad \mathrm{iff}\quad  v_{y/b,x/b}( p_1^2(x, x) ) = 0$ ，所以该公式是永真的。
+
+    第 $2$ 个式子判定如下（参考了书上的提示）：
+    \begin{align*}
+        & v(\exists x \exists y ( p_1^2(x, y) \to \forall z p_1^2(z, y))) = 0 \\
+        & \mathbf{A}a, b(v_{x/a,y/b}(p_1^2(x, y) \to \forall z p_1^2(z, y)) = 0) \\
+        & \mathbf{A}a, b(v_{x/a,y/b}(p_1^2(x, y)=1) \& v_{x/a,y/b}(\forall z p_1^2(z, y)) = 0) \\
+        & \mathbf{A}a, b(v_{x/a,y/b}(p_1^2(x, y)=1) \& \mathbf{E}c(v_{x/a,y/b,z/c}(p_1^2(z, y)=0))
+    \end{align*}
+
+    可找到矛盾：
+    \begin{align*}
+        & v_{x/a,y/b}(\forall z p(z, y)) = 1 \ \mathrm{iff}\ \mathbf{A}c(v_{z/c, y/b}(p(z, y)) = 1) \\
+        & v_{x/a,y/b}(\forall z p(z, y)) = 0 \ \mathrm{iff}\ \mathbf{E}c(v_{z/c, y/b}(p(z, y)) = 0) \\
+        & v_{x/a,y/b}(\exists z p(z, y)) = 1 \ \mathrm{iff}\ \mathbf{E}c(v_{z/c, y/b}(p(z, y)) = 1) \\
+        & v_{x/a,y/b}(\exists z p(z, y)) = 0 \ \mathrm{iff}\ \mathbf{A}c(v_{z/c, y/b}(p(z, y)) = 0)
+    \end{align*}
+    所以该公式是永真的。
+
+    第 $3$ 个式子判定如下（参考了书上的提示）：
+    \begin{align*}
+        & v(\exists x \exists y (p_1^1(x) \to p_2^1(y)) \to \exists x (p_1^1(x) \to p_2^1(x))) = 0 \\
+        & v(\exists x \exists y (p_1^1(x) \to p_2^1(y))) = 1 \& v(\exists x(p_1^1(x) \to p_2^1(x))) = 0 \\
+        & \mathbf{A}a\mathbf{A}b(v_{x/a,y/b}( p_1^1(x) \to p_2^1(y)) = 1) \& \mathbf{A}c(v_{x/c}(p_1^1(x) \to p_2^1(x)) = 0) \\
+        & \mathbf{A}a\mathbf{A}b(v_{x/a,y/b}(p_1^1(x))=1 \& v_{x/a,y/b}(p_2^1(y)=0)) \\
+        & \qquad \& \mathbf{A}c(v_{x/c}(p_1^1(x))=1 \& v_{x/c}(p_2^1(x))=0)
+    \end{align*}
+
+    令 $c=a$ 可构造矛盾：
+    \begin{align*}
+        & v_{x/a, y/b}(p_1^1(x) \to p_2^1(y))=1 \\
+        & v_{x/a, y/b}(p_1^1(x))=1 \\
+        & v_{x/a, y/b}(p_2^1(x))=0
+    \end{align*}
+    所以该公式是永真的。
+
+\end{document}

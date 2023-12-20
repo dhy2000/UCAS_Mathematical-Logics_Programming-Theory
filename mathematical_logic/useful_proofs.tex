@@ -1,0 +1,199 @@
+\documentclass[UTF8]{ctexart}
+\title{\vspace{-4em} 推理系统常用结论证明 \vspace{-2em} }
+\pagestyle{plain}
+% \usepackage{ctex}
+\usepackage{fancyhdr}
+\usepackage[a4paper]{geometry}
+\usepackage{multicol}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{lipsum}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fbox}
+% \usepackage{titlesec}
+
+\CTEXsetup[format={\Large\bfseries}]{section}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+\begin{document}
+    \maketitle
+
+    \setlength{\abovedisplayskip}{0pt}
+    \setlength{\belowdisplayskip}{0pt}
+    
+    \section{命题逻辑 \vspace{-3pt}}
+
+    \subsection*{推理规则 $(\lnot^{+})$ \vspace{-3pt}}
+    唯一一个用来给 $\vdash$ 右侧添加 $\lnot$ 符号的推理规则。
+
+    \begin{equation*}
+        (\lnot^{+}): \dfrac{\begin{matrix}\Sigma, A \vdash B \\ \Sigma, A \vdash \lnot B \end{matrix}}{\Sigma \vdash \lnot A}
+    \end{equation*}
+
+    \begin{align*}
+        (1) && \Sigma, \lnot \lnot A & \vdash \Sigma & (\in) \\
+        (2) && \lnot \lnot A, \lnot A & \vdash \lnot \lnot A & (\in) \\
+        (3) && \lnot \lnot A, \lnot A & \vdash \lnot A & (\in) \\
+        (4) && \lnot \lnot A & \vdash A & (\lnot^{-}) \\
+        (5) && \Sigma, \lnot \lnot A & \vdash A & (+\ (4)) \\
+        (6) && \Sigma, A & \vdash B & (\text{假设}) \\
+        (7) && \Sigma, \lnot \lnot A & \vdash B & (\mathrm{Tr}\ (5)(6)) \\
+        (8) && \Sigma, \lnot \lnot A & \vdash \lnot B & (\mathrm{ibid}) \\
+        (9) && \Sigma & \vdash \lnot A & (\lnot^{-}\ (7)(8))
+    \end{align*}
+
+    % \subsection*{逆反推理规则 $\dfrac{A \vdash B}{\lnot B \vdash \lnot A}$}
+
+    % \begin{align*}
+    %     \lnot B, A & \vdash \lnot B & (\in) \\
+    %     \lnot B, A & \vdash A & (\in) \\
+    %     \lnot B, A & \vdash B & (+) \\
+    %     \lnot B & \vdash \lnot A & (\lnot^{-})
+    % \end{align*}
+    
+    \subsection*{$\lnot \lnot A \vdash A$}
+    双重否定，书上 5.3.3 。类似还有 $A \vdash \lnot \lnot A$ ，用到 $(\lnot^{+})$ 。
+    \begin{align*}
+        \lnot \lnot A, \lnot A & \vdash \lnot \lnot A & (\in) \\
+        \lnot \lnot A, \lnot A & \vdash \lnot A & (\in) \\
+        \lnot \lnot A & \vdash A & (\lnot^{-})
+    \end{align*}
+    \subsection*{$\lnot A \vdash A \to B$}
+    前件为假则蕴含式必为真，作业二第一题中涉及。
+    \begin{align*}
+        A, \lnot A, \lnot B & \vdash A & (\in) \\
+        A, \lnot A, \lnot B & \vdash \lnot A & (\in) \\
+        A, \lnot A & \vdash B & (\lnot^{-}) \\
+        \lnot A & \vdash A \to B & (\to^{+})
+    \end{align*}
+
+    \subsection*{$A \to B \vdash (\lnot B) \to (\lnot A)$}
+    逆否命题和原命题等价，作业二第 2 题用到。
+    \begin{align*}
+        A \to B, \lnot B, A & \vdash A \to B & (\in) \\
+        A \to B, \lnot B, A & \vdash A & (\in) \\
+        A \to B, \lnot B, A & \vdash B & (\lnot^{-}) \\
+        A \to B, \lnot B, A & \vdash \lnot B & (\in) \\
+        A \to B, \lnot B & \vdash \lnot A & (\lnot^{-}) \\
+        A \to B & \vdash (\lnot B) \to (\lnot A) & (\to^{+})
+    \end{align*}
+
+    \subsection*{$A \vdash (\lnot A) \to B$}
+    \begin{align*}
+        A, \lnot A, \lnot B & \vdash A & (\in) \\
+        A, \lnot A, \lnot B & \vdash \lnot A & (\in) \\
+        A, \lnot A & \vdash B & (\lnot^{-}) \\
+        A & \vdash (\lnot A) \to B & (\to^{+})
+    \end{align*}
+
+    \subsection*{$B \vdash A \to B$}
+    \begin{align*}
+        B, A & \vdash B & (\in) \\
+        B & \vdash A \to B & (\to^{+})
+    \end{align*}
+
+    \subsection*{$A \lor B \vdash (\lnot A) \to B$}
+
+    \begin{align*}
+        A, \lnot A, \lnot B & \vdash A & (\in) \\
+        A, \lnot A, \lnot B & \vdash \lnot A & (\in) \\
+        A, \lnot A & \vdash B & (\lnot^{-}) \\
+        A & \vdash (\lnot A) \to B & (\to^{+}) \\
+        B, \lnot A & \vdash B & (\in) \\
+        B & \vdash (\lnot A) \to B & (\to^{+}) \\
+        A \lor B & \vdash (\lnot A) \to B & (\lor^{-})
+    \end{align*}
+
+    % \subsection{$\lnot A \to B \vdash A \lor B$}
+
+    % \begin{align*}
+    %     A & \vdash A & (\in) \\
+    %     A & \vdash A \lor B & (\lor^{+}) \\
+        
+    % \end{align*}
+    
+    \newpage
+    \subsection*{$\lnot(A \to B) \vdash A$}
+    尝试推出 $\lnot (A \to B), \lnot A \vdash A$ ，可借助 $\lnot A \vdash A \to B$ 。
+    \begin{align*}
+        (1) && \lnot A & \vdash A \to B & (\lnot A \vdash A \to B) \\
+        (2) && \lnot (A \to B) & \vdash (A\to B) \to A & (\lnot A \vdash A \to B) \\
+        (3) && \lnot (A \to B), \lnot A & \vdash A \to B & (+\ (1)) \\
+        (4) && \lnot (A \to B), \lnot A & \vdash (A \to B) \to A & (+\ (2)) \\
+        (5) && \lnot (A \to B), \lnot A & \vdash A & (\to^{-}\ (3)(4)) \\
+        (6) && \lnot (A \to B), \lnot A & \vdash \lnot A & (\in) \\
+        (7) && \lnot (A \to B) & \vdash A & (\lnot^{-}\ (5)(6))
+    \end{align*} \par
+    完整版（上述步骤展开 $\lnot A \vdash A \to B$）
+    \begin{align*}
+        (1) && A, \lnot A, \lnot B & \vdash A & (\in) \\
+        (2) && A, \lnot A, \lnot B & \vdash \lnot A & (\in) \\
+        (3) && A, \lnot A & \vdash B & (\lnot^{-}) \\
+        (4) && \lnot A & \vdash A \to B & (\to^{+}) \\
+        (5) && (A \to B), \lnot (A \to B), \lnot A & \vdash (A \to B) & (\in) \\
+        (6) && (A \to B), \lnot (A \to B), \lnot A & \vdash \lnot (A \to B) & (\in) \\
+        (7) && (A \to B), \lnot (A \to B) & \vdash A & (\lnot^{-}) \\
+        (8) && \lnot (A \to B) & \vdash (A \to B) \to A & (\to^{+}) \\
+        (9) && \lnot (A \to B), \lnot A & \vdash A \to B & (+\ (4)) \\
+        (10) && \lnot (A \to B), \lnot A & \vdash (A \to B) \to A & (+\ (8)) \\
+        (11) && \lnot (A \to B), \lnot A & \vdash A & (\to^{-}\ (9)(10)) \\
+        (12) && \lnot (A \to B), \lnot A & \vdash \lnot A & (\in) \\
+        (13) && \lnot (A \to B) & \vdash A & (\lnot^{-}\ (11)(12))
+    \end{align*}
+
+    \subsection*{$\lnot (A \to B) \vdash \lnot B$}
+    用 $(\lnot^{+})$ ，把 $B$ 提到左边，尝试构造右边是 $A \to B$ 和 $\lnot(A \to B)$ 。
+    \begin{align*}
+        A, B & \vdash B & (\in) \\
+        B & \vdash A \to B & (\to^{+}) \\
+        \lnot (A \to B), B & \vdash A \to B & (+) \\
+        \lnot (A \to B), B & \vdash \lnot (A \to B) & (\in) \\
+        \lnot (A \to B) & \vdash \lnot B & (\lnot^{+})
+    \end{align*}
+
+    \newpage
+    
+    \section{谓词逻辑}
+
+    \subsection{$\lnot \forall x A(x) \to \exists x \lnot A(x)$}
+    书上命题 5.3.3 第 1 条，给了例子。
+
+    \begin{align*}
+        \lnot A(z) & \vdash \lnot A(z) & (\in) \\
+        \lnot A(z) & \vdash \exists x \lnot A(x) & (\exists^{+}) \\
+        \lnot \exists x \lnot A(x), \lnot A(z) & \vdash \exists x \lnot A(x) & (+) \\
+        \lnot \exists x \lnot A(x), \lnot A(z) & \vdash \lnot \exists x \lnot A(x) & (\in) \\
+        \lnot \exists x \lnot A(x) & \vdash A(z) & (\lnot^{-}) \\
+        \lnot \exists x \lnot A(x) & \vdash \forall x A(x) & (\forall^{+}) \\
+        \lnot \forall x A(x), \lnot \exists x \lnot A(x) & \vdash \forall x A(x) & (+) \\
+        \lnot \forall x A(x), \lnot \exists x \lnot A(x) & \vdash \lnot \forall x A(x) & (\in) \\
+        \lnot \forall x A(x) & \vdash \exists x \lnot A(x) & (\lnot^{-})
+    \end{align*}
+
+    \subsection{$\lnot \exists x A(x) \to \forall x \lnot A(x)$}
+
+    书上命题 5.3.3 第 2 条。
+    \begin{align*}
+        \lnot A(z) & \vdash \lnot A(z) & (\in) \\
+        \lnot A(z) & \vdash \forall x \lnot A(x) & (\forall^{+}) \\
+        \lnot \forall x \lnot A(x), \lnot A(z) & \vdash \forall x \lnot A(x) & (+) \\
+        \lnot \forall x \lnot A(x), \lnot A(z) & \vdash \lnot \forall x \lnot A(x) & (\in) \\
+        \lnot \forall x \lnot A(x) & \vdash A(z) & (\lnot^{-}) \\
+        \lnot \forall x \lnot A(x) & \vdash \exists x A(x) & (\exists^{+}) \\
+        \lnot \exists x A(x), \lnot \forall x \lnot A(x) & \vdash \exists x A(x) & (+) \\
+        \lnot \exists x A(x), \lnot \forall x \lnot A(x) & \vdash \lnot \exists x A(x) & (\in) \\
+        \lnot \exists x A(x) & \vdash \forall x \lnot A(x) & (\lnot^{-})
+    \end{align*}
+
+\end{document}

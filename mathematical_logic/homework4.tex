@@ -1,0 +1,199 @@
+\documentclass[UTF8]{ctexart}
+\date{}
+\title{\vspace{-4em} 数理逻辑第四次作业}
+\pagestyle{plain}
+% \usepackage{ctex}
+\usepackage{fancyhdr}
+\usepackage[a4paper]{geometry}
+\usepackage{multicol}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{lipsum}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fbox}
+\usepackage{logicproof}
+\usepackage{framed}
+
+\CTEXsetup[format={\Large\bfseries}]{section}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+\begin{document}
+    \maketitle
+
+    \section{}
+    用自然推理规则证明下列断言：
+
+    \begin{enumerate}
+        \item $\lnot \exists x A(x) \vdash \dashv \forall x \lnot A(x)$ \par
+        证 "$\vdash$" 方向：$\lnot \exists x A(x) \vdash \forall x \lnot A(x)$
+        \begin{align*}
+            A(z) & \vdash A(z) & (\in) \\
+            A(z) & \vdash \exists x A(x) & (\exists^{+}) \\
+            & \vdash A(z) \to \exists x A(x) & (\to^{+}) \\
+            \lnot \lnot A(z) & \vdash A(z) \to \exists x A(x) & (+) \\
+            \lnot \lnot A(z), \lnot A(z) & \vdash \lnot \lnot A(z) & (\in) \\
+            \lnot \lnot A(z), \lnot A(z) & \vdash \lnot A(z) & (\in) \\
+            \lnot \lnot A(z) & \vdash A(z) & (\lnot^{-}) \\
+            \lnot \lnot A(z) & \vdash \exists x A(x) & (\to^{-}) \\
+            \lnot \exists x A(x), \lnot \lnot A(z) & \vdash \exists x A(x) & (+) \\
+            \lnot \exists x A(x), \lnot \lnot A(z) & \vdash \lnot \exists x A(x) & (\in) \\
+            \lnot \exists x A(x) & \vdash \lnot A(z) & (\lnot^{-}) \\
+            \lnot \exists x A(x) & \vdash \forall x \lnot A(x) & (\forall^{+})
+        \end{align*}
+        证 $\dashv$ 方向：$\forall x \lnot A(x) \vdash \lnot \exists x A(x)$
+        \begin{align*}
+            (1) && \forall x \lnot A(x) & \vdash \forall x \lnot A(x) & (\in) \\
+            (2) && \forall x \lnot A(x) & \vdash \lnot A(z) & (\forall^{-}) \\
+            (3) && \forall x \lnot A(x), A(z) & \vdash \lnot A(z) & (+) \\
+            (4) && \forall x \lnot A(x), A(z) & \vdash A(z) & (\in) \\
+            (5) && \forall x \lnot A(x), \exists x A(x) & \vdash \lnot A(z) & (\exists^{-}\ (3)) \\
+            (6) && \forall x \lnot A(x), \exists x A(x) & \vdash A(z) & (\exists^{-}\ (4)) \\
+            (7) && \forall x \lnot A(x) & \vdash \lnot \exists x A(x) & (\lnot^{+})
+        \end{align*}
+        \newpage
+        \item $\exists x A(x) \to B \vdash \dashv \forall x (A(x) \to B)$ ，其中 $x$ 不在 $B$ 中 \par
+        证 $\vdash$ 方向：$\exists x A(x) \to B \vdash \forall x (A(x) \to B)$
+        \begin{align*}
+            A(z) & \vdash A(z) & (\in) \\
+            A(z) & \vdash \exists x A(x) & (\exists^{+}) \\
+            (\exists x A(x)) \to B, A(z) & \vdash \exists x A(x) & (\exists^{+}) \\
+            (\exists x A(x)) \to B, A(z) & \vdash (\exists x A(x)) \to B & (\in) \\
+            (\exists x A(x)) \to B, A(z) & \vdash B & (\to^{-}) \\
+            (\exists x A(x)) \to B & \vdash A(z) \to B & (\to^{+}) \\
+            (\exists x A(x)) \to B & \vdash \forall x (A(x) \to B) & (\forall^{+})
+        \end{align*}
+        证 $\dashv$ 方向：$\forall x (A(x) \to B) \vdash (\exists x A(x)) \to B$
+        \begin{align*}
+            \forall x(A(x) \to B) & \vdash \forall x (A(x) \to B) & (\in) \\
+            \forall x(A(x) \to B) & \vdash A(z) \to B & (\forall^{-}) \\
+            \forall x(A(x) \to B), A(z) & \vdash A(z) \to B & (\forall^{-}) \\
+            \forall x(A(x) \to B), A(z) & \vdash A(z) & (\in) \\
+            \forall x(A(x) \to B), A(z) & \vdash B & (\to^{-}) \\
+            \forall x(A(x) \to B), \exists x A(x) & \vdash B & (\exists^{-}) \\
+            \forall x(A(x) \to B) & \vdash (\exists x A(x)) \to B & (\to^{+})
+        \end{align*}
+    \end{enumerate}
+    
+    \section{}
+    证明下列断言：
+    \begin{enumerate}
+        \item $\vdash \forall x \forall y r(x, y) \to \forall x r(x, x)$ \par
+        \begin{align*}
+            \forall x \forall y r(x, y) & \vdash \forall x \forall y r(x, y) & (\in) \\
+            \forall x \forall y r(x, y) & \vdash \forall y r(u, y) & (\forall^{-}) \\
+            \forall y r(u, y) & \vdash \forall y r(u, y) & (\in) \\
+            \forall y r(u, y) & \vdash r(u, u) & (\forall^{-}) \\
+            \forall x \forall y r(x, y) & \vdash r(u, u) & (\mathrm{Tr}) \\
+            \forall x \forall y r(x, y) & \vdash \forall x r(x, x) & (\forall^{+}) \\
+            & \vdash \forall x \forall y r(x, y) \to \forall x r(x, x) & (\to^{+})
+        \end{align*}
+        其中 $u$ 不在 $\forall x \forall y r(x, y)$ 中出现。
+        \item $\vdash \forall x A(x) \to \forall x(A(x) \lor B(x))$
+        \begin{align*}
+            \forall x A(x) & \vdash \forall x A(x) & (\in) \\
+            \forall x A(x) & \vdash A(z) & (\forall^{-}) \\
+            (\forall x A(x)) & \vdash A(z) \lor B(z) & (\lor^{+}) \\
+            (\forall x A(x)) & \vdash \forall x (A(x) \lor B(x)) & (\forall^{+}) \\
+            & \vdash (\forall x A(x)) \to \forall x (A(x) \lor B(x)) & (\to^{+})
+        \end{align*}
+        \item $\vdash (\exists x A(x) \to \forall x B(x)) \to \forall x (A(x) \to B(x))$
+        \begin{align*}
+            A(z) & \vdash A(z) & (\in) \\
+            A(z) & \vdash \exists x A(x) & (\exists^{+}) \\
+            (\exists x A(x)) \to (\forall x B(x)), A(z) & \vdash \exists x A(x) & (+) \\
+            (\exists x A(x)) \to (\forall x B(x)), A(z) & \vdash (\exists x A(x)) \to (\forall x B(x)) & (\in) \\
+            (\exists x A(x)) \to (\forall x B(x)), A(z) & \vdash \forall x B(x) & (\to^{-}) \\
+            (\exists x A(x)) \to (\forall x B(x)), A(z) & \vdash B(z) & (\forall^{-}) \\
+            (\exists x A(x)) \to (\forall x B(x)) & \vdash A(z) \to B(z) & (\to^{+}) \\
+            (\exists x A(x)) \to (\forall x B(x)) & \vdash \forall x (A(x) \to B(x)) & (\forall^{+}) \\
+            & \vdash ((\exists x A(x)) \to (\forall x B(x))) \to \forall x (A(x) \to B(x)) & (\to^{+})
+        \end{align*}
+        \item $\vdash \exists y(r(y) \to \forall y r(y))$ \par
+        借助了定理 $\lnot \exists x A(x) \vdash \forall x \lnot A(x)$ ， $\lnot (A \to B) \vdash A$ 和 $\lnot (A \to B) \vdash \lnot B$ 。
+        \begin{align*}
+            (1) && \lnot \exists y (r(y) \to \forall y r(y)) & \vdash \forall y \lnot (r(y) \to \forall y r(y)) & (\lnot \exists x A(x) \vdash \forall x \lnot A(x)) \\
+            (2) && \lnot \exists y (r(y) \to \forall y r(y)) & \vdash \lnot (r(z) \to \forall y r(y)) & (\forall^{-}) \\
+            (3) && \lnot (r(z) \to \forall y r(y)) & \vdash r(z) & (\lnot (A \to B) \vdash A) \\
+            (4) && \lnot (r(z) \to \forall y r(y)) & \vdash \lnot \forall y r(y) & (\lnot (A \to B) \vdash \lnot B) \\
+            (5) && \lnot \exists y (r(y) \to \forall y r(y)) & \vdash r(z) & (\mathrm{Tr}\ (2)(3)) \\
+            (6) && \lnot \exists y (r(y) \to \forall y r(y)) & \vdash \lnot \forall y r(y) & (\mathrm{Tr}\ (2)(4)) \\
+            (7) && \lnot \exists y (r(y) \to \forall y r(y)) & \vdash \forall y r(y) & (\forall^{+}\ (5)) \\
+            (8) && & \vdash \exists y (r(y) \to \forall y r(y)) & (\lnot^{-})
+        \end{align*}
+    \end{enumerate}
+
+    \newpage
+
+    定理 $\lnot (A \to B) \to A$ 证明：
+
+    \begin{align*}
+        (1) && A, \lnot A, \lnot B & \vdash A & (\in) \\
+        (2) && A, \lnot A, \lnot B & \vdash \lnot A & (\in) \\
+        (3) && A, \lnot A & \vdash B & (\lnot^{-}) \\
+        (4) && \lnot A & \vdash A \to B & (\to^{+}) \\
+        (5) && (A \to B), \lnot (A \to B), \lnot A & \vdash (A \to B) & (\in) \\
+        (6) && (A \to B), \lnot (A \to B), \lnot A & \vdash \lnot (A \to B) & (\in) \\
+        (7) && (A \to B), \lnot (A \to B) & \vdash A & (\lnot^{-}) \\
+        (8) && \lnot (A \to B) & \vdash (A \to B) \to A & (\to^{+}) \\
+        (9) && \lnot (A \to B), \lnot A & \vdash A \to B & (+\ (4)) \\
+        (10) && \lnot (A \to B), \lnot A & \vdash (A \to B) \to A & (+\ (8)) \\
+        (11) && \lnot (A \to B), \lnot A & \vdash A & (\to^{-}\ (9)(10)) \\
+        (12) && \lnot (A \to B), \lnot A & \vdash \lnot A & (\in) \\
+        (13) && \lnot (A \to B) & \vdash A & (\lnot^{-}\ (11)(12))
+    \end{align*}
+
+    定理 $\lnot (A \to B) \to \lnot B$ 证明：
+
+     \begin{align*}
+        A, B & \vdash B & (\in) \\
+        B & \vdash A \to B & (\to^{+}) \\
+        \lnot (A \to B), B & \vdash A \to B & (+) \\
+        \lnot (A \to B), B & \vdash \lnot (A \to B) & (\in) \\
+        \lnot (A \to B) & \vdash \lnot B & (\lnot^{+})
+    \end{align*}
+
+    \newpage
+
+    定理 $\lnot \exists x A(x) \to \forall x \lnot A(x)$ （书上命题 5.3.3 第 2 条）证明：
+    \begin{align*}
+        \lnot A(z) & \vdash \lnot A(z) & (\in) \\
+        \lnot A(z) & \vdash \forall x \lnot A(x) & (\forall^{+}) \\
+        \lnot \forall x \lnot A(x), \lnot A(z) & \vdash \forall x \lnot A(x) & (+) \\
+        \lnot \forall x \lnot A(x), \lnot A(z) & \vdash \lnot \forall x \lnot A(x) & (\in) \\
+        \lnot \forall x \lnot A(x) & \vdash A(z) & (\lnot^{-}) \\
+        \lnot \forall x \lnot A(x) & \vdash \exists x A(x) & (\exists^{+}) \\
+        \lnot \exists x A(x), \lnot \forall x \lnot A(x) & \vdash \exists x A(x) & (+) \\
+        \lnot \exists x A(x), \lnot \forall x \lnot A(x) & \vdash \lnot \exists x A(x) & (\in) \\
+        \lnot \exists x A(x) & \vdash \forall x \lnot A(x) & (\lnot^{-})
+    \end{align*}
+
+    推理规则 $(\lnot^{+})$ 的证明：
+
+    \begin{equation*}
+        (\lnot^{+}): \dfrac{\begin{matrix}\Sigma, A \vdash B \\ \Sigma, A \vdash \lnot B \end{matrix}}{\Sigma \vdash \lnot A}
+    \end{equation*}
+
+    \begin{align*}
+        (1) && \Sigma, \lnot \lnot A & \vdash \Sigma & (\in) \\
+        (2) && \lnot \lnot A, \lnot A & \vdash \lnot \lnot A & (\in) \\
+        (3) && \lnot \lnot A, \lnot A & \vdash \lnot A & (\in) \\
+        (4) && \lnot \lnot A & \vdash A & (\lnot^{-}) \\
+        (5) && \Sigma, \lnot \lnot A & \vdash A & (+\ (4)) \\
+        (6) && \Sigma, A & \vdash B & (\text{假设}) \\
+        (7) && \Sigma, \lnot \lnot A & \vdash B & (\mathrm{Tr}\ (5)(6)) \\
+        (8) && \Sigma, \lnot \lnot A & \vdash \lnot B & (\mathrm{ibid}) \\
+        (9) && \Sigma & \vdash \lnot A & (\lnot^{-}\ (7)(8))
+    \end{align*}
+
+\end{document}
