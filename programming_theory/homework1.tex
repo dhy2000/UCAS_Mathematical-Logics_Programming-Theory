@@ -1,0 +1,260 @@
+\documentclass[UTF8]{ctexart}
+\author{}
+\date{}
+\title{程序理论-第一次作业}
+\pagestyle{plain}
+\usepackage{xeCJK}
+\usepackage{fancyhdr}
+\usepackage[a4paper,scale=0.75]{geometry}
+\usepackage{multicol}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{lipsum}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fbox}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{framed}
+\usepackage{stmaryrd}
+
+\CTEXsetup[format={\Large\bfseries}]{section}
+\setlength{\parskip}{0pt}
+\setlength{\droptitle}{-4em}
+
+\begin{document}
+    \maketitle
+
+    \setlength{\abovedisplayskip}{0pt}
+    \setlength{\belowdisplayskip}{0pt}
+
+    \section*{Notes}
+
+    \subsection*{IMP 定义}
+    
+    共 5 种语句，其中 $var$ 为变量，$aexp$ 为算术表达式，$bexp$ 为布尔表达式：\vspace{-1em}
+
+    \begin{align*}
+        com &= \mathbf{skip}    & (\mathsf{skip})   \\
+            &\mid var := aexp   & (\mathsf{assign}) \\
+            &\mid com; com      & (\mathsf{seq})    \\
+            &\mid \mathbf{if}\ bexp\ \mathbf{then}\ com\ \mathbf{else}\ com  & (\mathsf{if}) \\
+            &\mid \mathbf{while}\ bexp\ \mathbf{do}\ com & (\mathsf{while})
+    \end{align*}
+
+    \subsection*{程序状态}
+
+    变量到值的映射，例如 $s=\llparenthesis a:=2, b:=3, c:=0 \rrparenthesis$ ；用 ${\llbracket e \rrbracket}_s$ 表示表达式 $e$ 在状态 $s$ 的值。
+
+    在 \LaTeX 中引入 \texttt{stmaryrd} 包，并在公式环境中使用 \texttt{\textbackslash llbracket \textbackslash rrbracket} 打出 $\llbracket\ \rrbracket$，使用 \texttt{\textbackslash llparenthesis \textbackslash rrparenthesis} 打出 $\llparenthesis\ \rrparenthesis$。
+
+    \subsection*{大步操作语义 (Big-step operational semantics)}
+
+    程序 $c$ 将状态 $s$ 转移到状态 $t$：$$(c, s) \Rightarrow t$$
+
+    推理规则：
+
+    \begin{itemize}
+        \setlength{\itemsep}{1em}
+        \setlength{\parsep}{1em}
+        % \setlength{\topsep}{1em}
+        \item $\dfrac{}{(\mathbf{skip}, s) \Rightarrow s}\ \mathsf{skip}$, $\dfrac{(c_1, s) \Rightarrow s'\quad (c_2,s') \Rightarrow s''}{(c_1;c_2,s) \Rightarrow s''}\ \mathsf{seq}$；
+        \item $\dfrac{}{(v:=e, s) \Rightarrow s(v:= {\llbracket e \rrbracket}_s)}\ \mathsf{assign}$，其中 $s(v:= {\llbracket e \rrbracket}_s)$ 表示用 $v := {\llbracket e \rrbracket}_s$ 更新 $s$；
+        \item $\dfrac{{\llbracket b \rrbracket}_s = \mathsf{true}\quad (c_1,s)\Rightarrow t}{(\mathbf{if}\ b\ \mathbf{then}\ c_1\ \mathbf{else}\ c_2, s) \Rightarrow t}\ \mathsf{ifTrue}$，$\dfrac{{\llbracket b \rrbracket}_s = \mathsf{false}\quad (c_2,s)\Rightarrow t}{(\mathbf{if}\ b\ \mathbf{then}\ c_1\ \mathbf{else}\ c_2, s) \Rightarrow t}\ \mathsf{ifFalse}$；
+        \item $\dfrac{{\llbracket b \rrbracket}_s=\mathsf{false}}{(\mathbf{while}\ b\ \mathbf{do}\ c, s)\Rightarrow s}\ \mathsf{whileFalse}$
+        \item $\dfrac{{\llbracket b \rrbracket}_s=\mathsf{true}\quad (c,s)\Rightarrow s'\quad (\mathbf{while}\ b\ \mathbf{do}\ c, s')\Rightarrow s''}{(\mathbf{while}\ b\ \mathbf{do}\ c, s)\Rightarrow s''}\ \mathsf{whileTrue}$
+    \end{itemize}
+
+    \subsection*{小步操作语义 (Small-step operational semantics)}
+
+    程序 $c$ 执行一步，剩余部分为 $c'$，从状态 $s$ 转移到状态 $s'$：$$(c, s) \to (c', s')$$
+
+    如果 $c$ 是 $\mathbf{skip}$ 表示程序终止了。
+
+    推理规则：
+
+    \begin{itemize}
+        \setlength{\itemsep}{1em}
+        \setlength{\parsep}{1em}
+        % \setlength{\topsep}{1em}
+        \item $\dfrac{}{(v:=e,s) \to (\mathbf{skip}, s(v:= {\llbracket e \rrbracket}_s))}\ \mathsf{assign}$
+        \item $\dfrac{(c_1, s) \to (c_1', s')}{(c_1; c_2, s) \to (c_1'; c_2, s')}\ \mathsf{seq1}$，$\dfrac{}{(\mathbf{skip}; c_2, s) \to (c_2, s)}\ \mathsf{seq2}$
+        \item $\dfrac{{\llbracket b \rrbracket}_s=\mathsf{true}}{(\mathbf{if}\ b\ \mathbf{then}\ c_1\ \mathbf{else}\ c_2, s) \to (c_1, s)}\ \mathsf{ifTrue}$，$\dfrac{{\llbracket b \rrbracket}_s=\mathsf{false}}{(\mathbf{if}\ b\ \mathbf{then}\ c_1\ \mathbf{else}\ c_2, s) \to (c_2, s)}\ \mathsf{ifFalse}$
+        \item $\dfrac{}{(\mathbf{while}\ b\ \mathbf{do}\ c, s) \to (\mathbf{if}\ b\ \mathbf{then}\ (c; \mathbf{while}\ b\ \mathbf{do}\ c)\ \mathbf{else}\ \mathbf{skip}, s)}\ \mathsf{while}$
+    \end{itemize}
+    \setlength{\parskip}{1em}
+    符号 $\to^{\ast}$ 表示 $\to$ 的自反传递闭包：$(c, s) \to^{\ast} (c', s')$ 表示 $(c, s)$ 执行零步或多步到达 $(c', s')$，$(c, s) \to^{\ast} (\mathbf{skip}, s')$ 表示从 $(c, s)$ 执行最终停止到状态 $s'$ 。
+    \setlength{\parskip}{0em}
+
+    自反传递闭包 $\to^{\ast}$ 的推理规则（归纳推理）：
+
+    \begin{itemize}
+        \setlength{\itemsep}{1em}
+        \item 自反性：$\dfrac{}{(c, s) \to^{\ast} (c, s)}$
+        \item 传递性：$\dfrac{(c_1, s_1) \to (c_3, s_3)\quad (c_3, s_3) \to^{\ast} (c_2, s_2)}{(c_1, s_1) \to^{\ast} (c_2, s_2)}$
+    \end{itemize}
+
+    \subsection*{大步小步语义的等价性}
+
+    课堂上讲了从大步语义 $(c, s) \Rightarrow t$ 推出小步语义 $(c, s) \to^{\ast} (\mathbf{skip}, t)$ 的证明过程：
+
+    \begin{framed}
+        证明由 $(c, s) \Rightarrow t$ 得出 $(c, s) \to^{\ast} (\mathbf{skip}, t)$ 。
+
+        首先需要证明小步语义的一个引理：$(c_1, s_1) \to^{\ast} (c_2, s_2)$ 推出 $(c_1; c', s_1) \to^{\ast} (c_2; c', s_2)$ 。
+
+        \begin{itemize}
+            \item 基础：由自反性 $(c, s) \to^{\ast} (c, s)$ 有 $(c; c', s) \to^{\ast} (c; c', s)$。
+            \item 归纳：假定有 $(c_1, s_1) \to (c_3, s_3)$ 和 $(c_3, s_3) \to^{\ast} (c_2, s_2)$，需要证 $(c_1; c', s_1) \to^{\ast} (c_2; c', s2)$。
+            \begin{itemize}
+                \item 由小步语义推理规则 $\mathrm{seq1}$ 有 $(c_1; c', s_1) \to (c_3; c', s_3)$；
+                \item 由归纳假设，根据 $(c_3, s_3) \to^{\ast} (c_2, s_2)$ 有 $(c_3; c', s_3) \to^{\ast} (c_2; c', s_2)$；
+                \item 由 $\to^{\ast}$ 的传递性，得 $(c_1; c', s_1) \to^{\ast} (c_2; c', s_2)$。
+            \end{itemize}
+        \end{itemize}
+
+        按大步语义推理的步数归纳 $(c, s) \Rightarrow t$，根据最后使用的大步语义推理规则划分情况：
+
+        \begin{itemize}
+            \item $\mathsf{skip}$：当 $c=\mathbf{skip}$ 且 $s=t$，只需证 $(\mathbf{skip}, s) \to^{\ast} (\mathbf{skip}, s)$，由 $\to^{\ast}$ 自反性可得。
+            \item $\mathsf{assign}$：当 $c=(v:=e)$ 且 $t=s(v:={\llbracket e \rrbracket}_s)$，只需证 $(v:=e,s) \to^{\ast} (\mathbf{skip}, s(v:={\llbracket e \rrbracket}_s))$，由小步语义的 $\mathsf{assign}$ 推理规则可得。
+            \item $\mathsf{seq}$：当 $c=c_1; c_2$ 并且有状态 $s'$ 使得 $(c_1, s)\Rightarrow s'$ 且 $(c_2, s') \Rightarrow t$。由归纳假设，有 $(c_1, s) \to^{\ast} (\mathbf{skip}, s')$ 和 $(c_2, s') \to^{\ast} (\mathbf{skip}, t)$。根据引理，有 $(c_1; c_2, s) \to^{\ast} (\mathbf{skip}; c_2, s')$，结合小步语义 $\mathsf{seq2}$ 推理规则，得 $(c_1; c_2, s) \to^{\ast} (\mathbf{skip}, t)$。
+            \item $\mathsf{ifTrue}$：当 $c=\mathbf{if}\ b\ \mathbf{then}\ c_1\ \mathbf{else}\ c_2$，${\llbracket b \rrbracket}_s=\mathsf{true}$ 且 $(c_1, s) \Rightarrow t$，由归纳假设有 $(c_1, s) \to^{\ast} (\mathbf{skip}, t)$，结合小步语义 $\mathsf{ifTrue}$ 推理规则可得 $(c, s) \to^{\ast} (\mathbf{skip}, t)$。$\mathsf{ifFalse}$ 情况类似可证。
+            \item $\mathsf{whileFalse}$：当 $c=\mathbf{while}\ b\ \mathbf{do}\ c'$，${\llbracket b \rrbracket}_s=\mathsf{false}$ 且 $s=t$，由小步语义的 $\mathsf{while}$ 和 $\mathsf{ifFalse}$ 推理规则，可得 $(c, s) \to^{\ast} (\mathbf{skip}, t)$。
+            \item $\mathsf{whileTrue}$：当 $c=\mathbf{while}\ b\ \mathbf{do}\ c'$，${\llbracket b \rrbracket}_s=\mathsf{true}$， $(c', s) \Rightarrow s'$ 且 $(c, s') \Rightarrow t$。根据归纳假设，有 $(c', s) \to^{\ast} (\mathbf{skip}, s')$ 和 $(c, s') \to^{\ast} (\mathbf{skip}, t)$。根据引理有 $(c';c, s) \to^{\ast} (\mathbf{skip};c, s')$，结合小步语义的 $\mathsf{while},\mathsf{ifTrue},\mathsf{seq2}$ 推理规则得 $(c, s) \to^{\ast} (\mathbf{skip}, t)$。
+        \end{itemize}
+        综上，对于任何的 $(c, s) \Rightarrow t$ 都可以推出 $(c, s) \to^{\ast} (\mathbf{skip}, t)$。
+    \end{framed}
+
+    \newpage
+    
+    \section*{Written Part}
+
+    \subsection*{Problem 1}
+
+    \begin{framed}
+    Carefully write down (as in the lecture slides)  the other direction in the equivalence between big-step and small-step semantics.
+
+    从小步语义 $(c, s) \to^{\ast} (\mathbf{skip}, t)$ 推出大步语义 $(c, s) \Rightarrow t$。
+    \end{framed}
+
+    解：与课上讲的大步语义证小步语义类似的归纳。如果有 $(c_1, s_1) \to (c_2, s_2)$，并且 $(c_2, s_2) \to^{\ast} (\mathbf{skip}, t)$ ，根据归纳假设有 $(c_2, s_2) \Rightarrow t$；由 $\to^{\ast}$ 的传递推理规则可以得到 $(c_1, s_1) \to^{\ast} (\mathbf{skip}, t)$。接下来只需要根据 $(c_1, s_1) \to (c_2, s_2)$ 所采用的小步语义推理规则分类讨论，并转到对应的大步推理规则从 $(c_2, s_2) \Rightarrow t$ 推出 $(c_1, s_1) \Rightarrow t$ 即可归纳得到对 $(c_1, s_1) \to^{\ast} (\mathbf{skip}, t)$ 也能推出 $(c_1, s_1) \Rightarrow t$。
+    
+    基础情况：当 $c=\mathbf{skip}, s=t$ 时，由 $\to^{\ast}$ 的自反性，$(c, s)\to^{\ast}(\mathbf{skip}, t)$，由大步语义的 $\mathsf{skip}$ 推理规则，$(\mathbf{skip}, s) \Rightarrow t$，此时有 $(c, s) \Rightarrow t$ 成立。
+
+    归纳推理：按最后一步采用的小步语义推理规则分类
+
+    \begin{itemize}
+        \item $\mathsf{assign}$：当 $c=(v:=e)$ 且 $t=s(v:={\llbracket e \rrbracket}_s)$，有 $(v:=e; s) \to (\mathbf{skip}, s(v:={\llbracket e \rrbracket}_s))$。只需证 $(v:=e,s)\Rightarrow s(v:={\llbracket e \rrbracket}_s)$，由大步语义的 $\mathsf{assign}$ 推理规则可得。
+        \item $\mathsf{seq2}$：当 $c=\mathbf{skip}; c_2$ 时，有 $(\mathbf{skip}; c_2, s) \to (c_2, s)$。根据归纳假设，由 $(c_2, s) \to^{\ast} (\mathbf{skip}, t)$ 得 $(c_2, s) \Rightarrow t$；根据 $\to^{\ast}$ 的传递性，有 $(\mathbf{skip}; c_2, s) \to^{\ast} (\mathbf{skip}, t)$。只需证 $(\mathbf{skip}; c_2, s) \Rightarrow t$，可根据大步语义的 $\mathsf{skip}, \mathsf{seq}$ 推理规则，由 $(\mathbf{skip}, s) \Rightarrow s$ 和 $(c_2, s) \Rightarrow t$ 得证。
+        \item $\mathsf{seq1}$：当 $c=c_1; c_2$ 且 $(c_1, s) \to (c_1', s')$，有 $(c_1; c_2, s) \to (c_1'; c_2, s')$。根据归纳假设，如果 $(c_1'; c_2, s') \to^{\ast} (\mathbf{skip}, t)$ 则 $(c_1'; c_2, s') \Rightarrow t$，只需证 $(c_1; c_2, s) \Rightarrow t$。由大步语义的 $\mathsf{seq}$ 规则，存在 $s''$ 使得 $(c_1', s') \Rightarrow s''$ 且 $(c_2, s'') \Rightarrow t$。根据课上证过的从大步语义到小步语义的等价性，由 $(c_1', s') \Rightarrow s''$ 可以得 $(c_1', s') \to^{\ast} (\mathbf{skip}, s'')$，再根据 $(c_1, s) \to (c_1', s')$ 和传递性得 $(c_1, s) \to^{\ast} (\mathbf{skip}, s'')$，由归纳假设得到 $(c_1, s) \Rightarrow s''$。再由 $(c_2, s'') \Rightarrow t$ 和大步语义的 $\mathsf{seq}$ 推理规则得到 $(c_1; c_2, s) \Rightarrow t$。
+        \item $\mathsf{ifTrue}$：当 $c=\mathbf{if}\ b\ \mathbf{then}\ c_1\ \mathbf{else}\ c_2$ 且 ${\llbracket b \rrbracket}_s = \mathsf{true}$，有 $(c, s) \to (c_1, s)$。如果 $(c_1, s) \to^{\ast} (\mathbf{skip}, t)$ 则由传递性有 $(c, s) \to^{\ast} (\mathbf{skip}, t)$，再由归纳假设有 $(c_1, s) \Rightarrow t$。根据大步语义的 $\mathsf{ifTrue}$ 推理规则，可得 $(c, s) \Rightarrow t$。$\mathsf{ifFalse}$ 与 $\mathsf{ifTrue}$ 类似。
+        \item $\mathsf{while}$：当 $c=\mathbf{while}\ b\ \mathbf{do}\ c'$ 有 $(c, s) \to (\mathbf{if}\ b\ \mathbf{then}\ (c'; \mathbf{while}\ b\ \mathbf{do}\ c')\ \mathbf{else}\ \mathbf{skip}, s)$。\\
+        当 ${\llbracket b \rrbracket}_s = \mathsf{false}$ 时，根据大步语义的 $\mathsf{whileFalse}$ 推理规则，有 $(c, s) \Rightarrow s$。\\
+        当 ${\llbracket b \rrbracket}_s = \mathsf{true}$ 时，当 $(c'; \mathbf{while}\ b\ \mathbf{do}\ c', s) \to^{\ast} (\mathbf{skip}, t)$ 时，由小步语义的 $\mathsf{ifTrue}$ 规则有 $(\mathbf{if}\ b\ \mathbf{then}\ (c'; \mathbf{while}\ b\ \mathbf{do}\ c')\ \mathbf{else}\ \mathbf{skip}, s) \to^{\ast} (\mathbf{skip}, t)$，再由传递性有 $(c, s) \to^{\ast} (\mathbf{skip}, t)$。此时只需证 $(c, s) \Rightarrow t$。根据归纳假设，$(c'; \mathbf{while}\ b\ \mathbf{do}\ c', s) \Rightarrow t$，由大步语义的 $\mathsf{seq}$ 推理规则，存在 $s'$ 使得 $(c', s) \Rightarrow s'$ 并且 $(\mathbf{while}\ b\ \mathbf{do}\ c', s') \Rightarrow t$；再由大步语义的 $\mathsf{whileTrue}$ 推理规则，有 $(\mathbf{while}\ b\ \mathbf{do}\ c', s') \Rightarrow t$，即 $(c, s) \Rightarrow t$ 得证。
+    \end{itemize}
+
+    \newpage
+    
+    \subsection*{Problem 2}
+
+    \begin{framed}
+        Define (by induction on the structure of the program) a function $assigned$ from programs to a set of variables that may be assigned to in the program. Prove (by induction on big-step semantics) that if $(c, s) \Rightarrow t$ and $x$ are not in the assigned set, then the value of $x$ in $s$ and $t$ are the same.
+    \end{framed}
+
+    解：要定义的函数 $assigned$ 参数为一个 IMP 程序，返回值为一个集合。形式化的定义如下：
+
+    $$
+    assigned(com) = \begin{cases}
+        \varnothing & com=\mathbf{skip} \\
+        \left\{var\right\} & com=(var := aexp) \\
+        assigned({com}_1) \cup assigned({com}_2) & com=({com}_1; {com}_2) \\
+        assigned({com}_1) \cup assigned({com}_2) & com=(\mathbf{if}\ bexp\ \mathbf{then}\ {com}_1\ \mathbf{else}\ {com}_2) \\
+        assigned(com) & com=(\mathbf{while}\ bexp\ \mathbf{do}\ com)
+    \end{cases}
+    $$
+
+    要证明的结论：如果 $(c, s) \Rightarrow t$ 并且 $x \notin assigned(c)$ 则 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$。
+
+    归纳证明：
+    \begin{itemize}
+        \item $c=\mathbf{skip}$ 则一定有 $t=s$ 和 $assigned(c) = \varnothing$，显然 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$ 成立。
+        \item $c=(v:=e)$，此时 $t=s(v:={\llbracket e \rrbracket}_s)$ 且 $assigned(c)=\left\{v\right\}$。若 $x \notin assigned(c)$ 则 $x \ne v$，${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_{s(v:={\llbracket e \rrbracket}_s)} = {\llbracket x \rrbracket}_t$，结论成立。
+        \item $c=(c_1; c_2)$，设 $(c_1, s) \Rightarrow s', (c_2, s') \Rightarrow t$。根据归纳假设：\begin{itemize}
+            \item 当 $x \notin assigned(c_1)$ 时有 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_{s'}$
+            \item 当 $x \notin assigned(c_2)$ 时有 ${\llbracket x \rrbracket}_{s'} = {\llbracket x \rrbracket}_t$
+        \end{itemize}
+        因为 $assigned(c)=assigned(c_1) \cup assigned(c_2)$，$x \notin assigned(c)$ 意味着 $x \notin assigned(c_1)$ 且 $x \notin assigned(c_2)$，所以 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_{s'} = {\llbracket x \rrbracket}_t$。
+        \item $c=(\mathbf{if}\ b\ \mathbf{then}\ c_1\ \mathbf{else}\ c_2)$，此时 $assigned(c)=assigned(c_1) \cup assigned(c_2)$，$x \notin assigned(c)$ 意味着 $x \notin assigned(c_1)$ 且 $x \notin assigned(c_2)$。\\
+        对 $b$ 分类讨论：\begin{itemize}
+            \item ${\llbracket b \rrbracket}_s=\mathsf{true}$，由 $\mathsf{ifTrue}$ 推理规则，设 $(c_1, s) \Rightarrow t$ 则 $(c, s) \Rightarrow t$。\\
+            根据归纳假设，由 $x \notin assigned(c_1)$ 可推出 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$。
+            \item ${\llbracket b \rrbracket}_s=\mathsf{false}$，由 $\mathsf{ifFalse}$ 推理规则，设 $(c_2, s) \Rightarrow t$ 则 $(c, s) \Rightarrow t$。\\
+            根据归纳假设，由 $x \notin assigned(c_2)$ 可推出 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$。
+        \end{itemize}
+        无论 ${\llbracket b \rrbracket}_s$ 取何值，总有 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$。
+        \item $c=(\mathbf{while}\ b\ \mathbf{do}\ c')$，此时 $assigned(c)=assigned(c')$。对 $b$ 分类讨论：\begin{itemize}
+            \item ${\llbracket b \rrbracket}_s=\mathsf{false}$，由 $\mathsf{whileFalse}$ 规则 $t=s$，显然 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$ 成立。
+            \item ${\llbracket b \rrbracket}_s=\mathsf{true}$，由 $\mathsf{whileTrue}$ 规则设 $(c', s) \Rightarrow s', (\mathbf{while}\ b\ \mathbf{do}\ c', s') \Rightarrow t$。根据归纳假设，对 $(c', s) \Rightarrow s'$ 当 $x \notin assigned(c')$ 时 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_{s'}$；对 $(\mathbf{while}\ b\ \mathbf{do}\ c', s') \Rightarrow t$ 当 $x \notin assigned(c)$ 时 ${\llbracket x \rrbracket}_{s'} = {\llbracket x \rrbracket}_t$。结合两者有 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$ 成立。
+        \end{itemize}
+        无论 ${\llbracket b \rrbracket}_s$ 取何值，总有 ${\llbracket x \rrbracket}_s = {\llbracket x \rrbracket}_t$。
+    \end{itemize}
+
+    \subsection*{Problem 3}
+
+    \begin{framed}
+        Define a small-step semantics for the evaluation of arithmetic expressions, specifying a left-to-right evaluation order. The syntax for arithmetic expressions is given by:
+
+        $$
+            expr = N\ int \mid V\ var \mid Plus\ expr\ expr
+        $$
+
+        where $N$ denotes constants, $V$ denotes variables, and $Plus$ denotes addition. For example, it should be possible to derive from the semantics the following:
+
+        $$
+            (Plus\ (Plus\ (N\ 3)\ (V\ x))\ (V\ y), \llparenthesis x:=5, y:=2 \rrparenthesis) \to^{\ast} (N\ 10, \llparenthesis x:=5, y:=2 \rrparenthesis)
+        $$
+    \end{framed}
+
+    表达式求值过程的小步语义：$(e, s) \to (e', s)$ （显然状态 $s$ 不会被改变） \begin{itemize}
+        \item $e=N\ n$，小步执行终止。更进一步地，任何 $e$ 都存在 $n$ 使得 $(e, s) \to^{\ast} (N\ n, s)$。
+        \item $e=V\ v$，有 $(V\ v, s) \to (N\ {\llbracket v \rrbracket}_s, s)$。
+        \item $e=Plus\ e_1\ e_2$，分三种情况 \begin{itemize}
+            \item 两个操作数均已确定，即 $e_1=N\ n_1, e_2=N\ n_2$，则 $(e, s) \to (N\ (n_1+n_2), s)$
+            \item 第一个操作数已确定，则将第二个操作数运算一步，即 $(e, s) \to (Plus\ e_1, e_2', s)$
+            \item 两个操作数均未确定，则将第一个操作数运算一步，即 $(e, s) \to (Plus\ e_1', e_2, s)$
+        \end{itemize}
+    \end{itemize}
+
+    用形式化的小步语义推理规则描述：\begin{itemize}
+        \setlength{\itemsep}{1em}
+        \setlength{\parsep}{1em}
+        \item $(N\ n, s)$ 为终止状态，无推理规则
+        \item $\dfrac{}{(V\ v, s) \to (N\ {\llbracket v \rrbracket}_s, s)}\ \mathsf{var}$
+        \item $\dfrac{}{(Plus\ (N\ n_1)\ (N\ n_2), s) \to (N\ n_1+n_2, s)}\ \mathsf{plus2}$
+        \item $\dfrac{(e_2, s) \to (e_2', s)}{(Plus\ (N\ n_1)\ e_2, s) \to (Plus\ (N\ n_1)\ e_2', s)}\ \mathsf{plus1}$
+        \item $\dfrac{(e_1, s) \to (e_1', s)}{(Plus\ e_1\ e_2, s) \to (Plus\ e_1'\ e_2, s)}\ \mathsf{plus0}$
+    \end{itemize}
+
+    \setlength{\parskip}{1em}
+    示例表达式的小步推理过程：
+    \setlength{\parskip}{0em}
+
+    \begin{align*}
+       & (Plus\ (Plus\ (N\ 3)\ (V\ x))\ (V\ y), \llparenthesis x:=5, y:=2 \rrparenthesis) \\
+       \to\ & (Plus\ (Plus\ (N\ 3)\ (N\ 5))\ (V\ y), \llparenthesis x:=5, y:=2 \rrparenthesis) & (\mathsf{plus0}, \mathsf{plus1}) \\
+       \to\ & (Plus\ (N\ 8)\ (V\ y), \llparenthesis x:=5, y:=2 \rrparenthesis) & (\mathsf{plus0}, \mathsf{plus2}) \\
+       \to\ & (Plus\ (N\ 8)\ (N\ 2), \llparenthesis x:=5, y:=2 \rrparenthesis) & (\mathsf{plus1}, \mathsf{var}) \\
+       \to\ & (N\ 10, \llparenthesis x:=5, y:=2 \rrparenthesis) & (\mathsf{plus2})
+    \end{align*}
+
+\end{document}
